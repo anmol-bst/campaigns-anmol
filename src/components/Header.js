@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import logo from './TitleHead.png'
+import logo from '../assets/TitleHead.png'
 
 const headerStyle = {
     backgroundColor: "#1F2640",

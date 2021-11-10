@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React, { Component } from 'react'
-import Price from './Price.svg'
-import Csv from './file.svg'
-import Report from './statisticsReport.svg'
-import Calendar from './calendar.svg'
+import Price from '../assets/Price.svg'
+import Csv from '../assets/file.svg'
+import Report from '../assets/statisticsReport.svg'
+import Calendar from '../assets/calendar.svg'
 
 const heading2Style = {
     fontSize: 16,

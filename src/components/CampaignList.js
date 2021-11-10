@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react'
 import TopbarTab from './TopbarTab'
-import Campaigns from './SampleData.json'
+import Campaigns from '../assets/SampleData.json'
 import CampaignInfo from './CampaignInfo'
 
 const shifted10 = {
