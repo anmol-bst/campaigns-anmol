@@ -4,6 +4,8 @@ import Price from '../assets/Price.svg'
 import Csv from '../assets/file.svg'
 import Report from '../assets/statisticsReport.svg'
 import Calendar from '../assets/calendar.svg'
+import DatePicker from "react-date-picker"
+import '../assets/CustomDatePicker.css'
 
 const heading2Style = {
     fontSize: 16,
@@ -35,7 +37,8 @@ const imgStyle = {
 const imgLabelStyle = {
     height: 24,
     width: 24,
-    float: "left"
+    float: "left",
+    marginRight: 6
 }
 const infoLabelStyle = {
     float: "left",
@@ -52,12 +55,28 @@ const labelStyle = {
     color: "#7788A3",
     textAlign: "left",
     margin: 0,
-    marginLeft: 6,
     marginTop: 4
 }
 const hiddenStyle = {
     display: "none"
 }
+const infoDateLabelStyle = {
+    float: "left",
+    cursor: "pointer",
+    verticalAlign: "center",
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 8,
+    marginBottom: 8
+}
+const ExampleCustomInput = React.forwardRef(({ value, onClick }, ref) => (
+    <div style={infoDateLabelStyle} onClick={onClick} ref={ref}>
+    <img src={Calendar} style={imgLabelStyle}/>
+    <div style={floatLeft}>
+        <p style={labelStyle}>Schedule again</p>
+    </div>
+    </div>
+  ));
 class CampaignInfo extends Component {
     constructor(props) {
         super()
@@ -67,7 +86,7 @@ class CampaignInfo extends Component {
         let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
         let dNow = new Date()
         let diffTime = dNow - d;
-        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1; 
 
         this.state = {
             name:props.name,
@@ -92,13 +111,26 @@ class CampaignInfo extends Component {
         this.setState({activeTab: this.props.activeTab}, this.setState({visible:isVisible}, () => {console.log("postvisible" + this.state.activeTab + this.state.visible)}))
         }
     }
+    dateChange = (value) => {
+        let d = new Date(value)
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+        let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+        let dNow = new Date()
+        let diffTime = dNow - d;
+        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
+        let isVisible = ((diffDays < 0) & this.props.activeTab == 0) | ((diffDays == 0) & this.props.activeTab == 1) | ((diffDays > 0) & this.props.activeTab == 2)
+        this.setState({createdOn: `${mo} ${ye}, ${da}`});
+        this.setState({diffDays:diffDays})
+        this.setState({visible:isVisible})
+    }
 
     render() {
         return(
             <tr key={this.state.id} style={this.state.visible ? borderStyle : hiddenStyle}>
                 <td>
                     <p style={heading2Style}>{this.state.createdOn}</p>
-                    <p style={heading3Style}>{(this.state.diffDays == 0) ? "Live" : (Math.abs(this.state.diffDays).toString() + ((this.state.diffDays > 0) ? " days ago" : " days to go"))}</p>
+                    <p style={heading3Style}>{(this.state.diffDays == 0) ? "Live" : (Math.abs(this.state.diffDays).toString() + ((Math.abs(this.state.diffDays) > 1) ? " days" : " day") + ((this.state.diffDays > 0) ? " ago" : " to go"))}</p>
                 </td>
                 <td>
                     <img src={this.state.image_url} style={imgStyle}/>
@@ -128,12 +160,7 @@ class CampaignInfo extends Component {
                             <p style={labelStyle}>Report</p>
                         </div>
                     </div>
-                    <div style={infoLabelStyle}>
-                        <img src={Calendar} style={imgLabelStyle}/>
-                        <div style={floatLeft}>
-                            <p style={labelStyle}>Schedule again</p>
-                        </div>
-                    </div>
+                        <DatePicker value={new Date()} returnValue="start" calendarIcon={<ExampleCustomInput/>} onChange={this.dateChange}/>
                 </td>
             </tr>
         )

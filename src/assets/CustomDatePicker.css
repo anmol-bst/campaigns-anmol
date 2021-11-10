@@ -1,0 +1,22 @@
+.react-date-picker {
+    margin: 0;
+    float: left;
+}
+.react-date-picker__wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    border: 0px solid gray;
+}
+.react-date-picker__inputGroup {
+    width: 0;
+    display: none;
+}
+.react-date-picker__clear-button {
+    border: 0;
+    display: none;
+}
+.react-date-picker__button {
+    padding: 0;
+    margin: 0;
+}

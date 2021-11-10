@@ -8,11 +8,14 @@ const shifted10 = {
     marginLeft: "12.5%",
     width: "75%"
 }
-const shadowStyle = {
+const overflowStyle = {
     marginLeft: "12.5%",
-    boxShadow: "0 2px 10px 0 rgba(0, 0, 0, 0.1)",
-    width: "75%",
     marginTop: 40,
+    boxShadow: "0 2px 10px 0 rgba(0, 0, 0, 0.1)",
+    width: "75%"
+}
+const shadowStyle = {
+    width: "100%",
     borderWidth: 0,
     borderCollapse: "collapse",
     color: "#556789",
@@ -170,6 +173,7 @@ class CampaignList extends Component {
                     <TopbarTab text= "Past Campaigns" activeTab= {this.state.activeTab} index={2} clickHandler={this.setActiveTab}/>
                     <hr style={rowStyle}/>
                 </div>
+                <div style={overflowStyle}>
                 <table style={shadowStyle}>
                     <tbody>
                         <tr>
@@ -184,6 +188,7 @@ class CampaignList extends Component {
                         ))}
                     </tbody>
                 </table>
+                </div>
                 <div id="myModal" style={this.state.display? modalStyle : modelHiddenstyle}>
 
                     <div style={modalContentStyle}>

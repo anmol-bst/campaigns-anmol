@@ -5,8 +5,7 @@ import logo from '../assets/TitleHead.png'
 const headerStyle = {
     backgroundColor: "#1F2640",
     height: 44,
-    padding: 18,
-    width: "100%"
+    padding: 18
 }
 const imgStyle = {
     width: 148,
