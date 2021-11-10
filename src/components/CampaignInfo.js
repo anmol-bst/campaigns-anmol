@@ -5,6 +5,7 @@ import Csv from '../assets/file.svg'
 import Report from '../assets/statisticsReport.svg'
 import Calendar from '../assets/calendar.svg'
 import DatePicker from "react-date-picker"
+import { getDatabase, ref, update, push, child, key} from "firebase/database";
 import '../assets/CustomDatePicker.css'
 
 const heading2Style = {
@@ -103,13 +104,6 @@ class CampaignInfo extends Component {
             visible: ((diffDays < 0) & props.activeTab == 0) | ((diffDays == 0) & props.activeTab == 1) | ((diffDays > 0) & props.activeTab == 2)
         }
     }
-    componentDidUpdate(nextProps) {
-        let isVisible = ((this.state.diffDays < 0) & this.props.activeTab == 0) | ((this.state.diffDays == 0) & this.props.activeTab == 1) | ((this.state.diffDays > 0) & this.props.activeTab == 2)
-        if (this.state.activeTab != this.props.activeTab)
-        {
-        this.setState({activeTab: this.props.activeTab}, this.setState({visible:isVisible}))
-        }
-    }
     dateChange = (value) => {
         let d = new Date(value)
         let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
@@ -122,6 +116,69 @@ class CampaignInfo extends Component {
         this.setState({createdOn: `${mo} ${ye}, ${da}`});
         this.setState({diffDays:diffDays})
         this.setState({visible:isVisible})
+    }
+    dateUpdate = (value) => {
+        this.dateChange(value)
+        const db = getDatabase();
+
+        // A post entry.
+        const postData = {
+            name: this.state.name,
+            createdOn: (new Date(value)).getTime(),
+            region: this.state.region,
+            price: this.state.price,
+            report: this.state.report,
+            csv: this.state.csv,
+            image_url: this.state.image_url
+        };
+
+        // Get a key for a new Post.
+        const newPostKey = this.state.id;
+
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        const updates = {};
+        updates['/data/' + newPostKey] = postData;
+
+        return update(ref(db), updates);
+    }
+    componentDidUpdate(nextProps) {
+        let isVisible = ((this.state.diffDays < 0) & this.props.activeTab == 0) | ((this.state.diffDays == 0) & this.props.activeTab == 1) | ((this.state.diffDays > 0) & this.props.activeTab == 2)
+        if (this.state.activeTab != this.props.activeTab)
+        {
+        this.setState({activeTab: this.props.activeTab}, this.setState({visible:isVisible}))
+        }
+        if (this.state.name != this.props.name)
+        {
+        this.setState({name: this.props.name})
+        }
+        if (this.state.region != this.props.region)
+        {
+        this.setState({region: this.props.region})
+        }
+        if (this.state.price != this.props.price)
+        {
+        this.setState({price: this.props.price})
+        }
+        if (this.state.csv != this.props.csv)
+        {
+        this.setState({csv: this.props.csv})
+        }
+        if (this.state.report != this.props.report)
+        {
+        this.setState({report: this.props.report})
+        }
+        if (this.state.image_url != this.props.image_url)
+        {
+        this.setState({image_url: this.props.image_url})
+        }
+        let d = new Date(this.props.createdOn)
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+        let mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+        if (this.state.createdOn != `${mo} ${ye}, ${da}`)
+        {
+        this.dateChange(this.props.createdOn)
+        }
     }
 
     render() {
@@ -159,7 +216,7 @@ class CampaignInfo extends Component {
                             <p style={labelStyle}>{this.props.locales.report}</p>
                         </div>
                     </div>
-                        <DatePicker value={new Date()} returnValue="start" calendarIcon={<ExampleCustomInput text={this.props.locales.schedule}/>} onChange={this.dateChange}/>
+                        <DatePicker value={new Date()} returnValue="start" calendarIcon={<ExampleCustomInput text={this.props.locales.schedule}/>} onChange={this.dateUpdate}/>
                 </td>
             </tr>
         )

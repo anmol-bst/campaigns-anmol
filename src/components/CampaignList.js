@@ -1,8 +1,10 @@
 
 import React, { Component } from 'react'
 import TopbarTab from './TopbarTab'
-import Campaigns from '../assets/SampleData.json'
 import CampaignInfo from './CampaignInfo'
+import config from '../config'
+import { getDatabase, ref, onValue} from "firebase/database";
+import { initializeApp } from '@firebase/app';
 
 const shifted10 = {
     marginLeft: "12.5%",
@@ -57,14 +59,15 @@ const modalStyle = {
     backgroundColor: "rgba(0,0,0,0.7)"
 }
 const imgStyle = {
-    height: 138,
-    width: 138,
+    height: "33%",
+    width: "33%",
     float: "left",
     boxShadow: "0 2px 15px 0 rgba(0, 0, 0, 0.15)",
 }
 const modalContentStyle = {
     backgroundColor: "#fefefe",
-    margin: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
     marginTop: "4.5%",
     border: "1px solid #888",
     width: "25%",
@@ -75,7 +78,7 @@ const modelHiddenstyle = {
 }
 const displayBlockstyle = {
     display: "block",
-    height: 138,
+    height: "33%",
     display: "flex"
 }
 const heading2Style = {
@@ -115,12 +118,12 @@ const modalTableStyle = {
 const modalTableLabelStyle = {
     textAlign: "left",
     color: "#7788A3",
-    padding: "5px 20px 20px 0px"
+    padding: "5px 2px 20px 0px"
 }
 const modalTableValueStyle = {
     textAlign: "right",
     color: "#556789",
-    padding: "5px 0px 20px 20px",
+    padding: "5px 0px 20px 2px",
     fontWeight: "bold"
 }
 const closeButtonStyle = {
@@ -146,8 +149,17 @@ class CampaignList extends Component {
             display: false,
             image_url: "",
             displayName: "",
-            displayRegion: ""
+            displayRegion: "",
+            campaigns: {"data":[]}
         }
+        var fire = initializeApp(config)
+        const db = getDatabase();
+        const starCountRef = ref(db, '/');
+        onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        this.setState({campaigns:data})
+        });
+
         this.setActiveTab = this.setActiveTab.bind(this)
         this.displayModal = this.displayModal.bind(this)
         this.hideModal = this.hideModal.bind(this)
@@ -178,7 +190,7 @@ class CampaignList extends Component {
                             <th style={thStyle}>{this.props.locales.view}</th>
                             <th style={thStyle}>{this.props.locales.actions}</th>
                         </tr>
-                        {Campaigns.data.map((item, i) => (
+                        {this.state.campaigns.data.map((item, i) => (
                             <CampaignInfo name={item.name} createdOn={item.createdOn} price={item.price} region={item.region} activeTab={this.state.activeTab}
                                         csv={item.csv} report={item.report} image_url={item.image_url} id={i} displayFunc={this.displayModal} locales={this.props.locales}/>
                         ))}
