@@ -25,7 +25,8 @@ const shadowStyle = {
 const thStyle = {
     backgroundColor: "#F1F1F4",
     textAlign: "left",
-    padding: "12px 20px"
+    padding: "12px 20px",
+    textTransform: "uppercase"
 }
 const fontXL = {
     fontSize: 48,
@@ -147,14 +148,9 @@ class CampaignList extends Component {
             displayName: "",
             displayRegion: ""
         }
-        
         this.setActiveTab = this.setActiveTab.bind(this)
         this.displayModal = this.displayModal.bind(this)
         this.hideModal = this.hideModal.bind(this)
-    }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log("compwill"+ this.state.activeTab)
-        this.setState({activeTab: nextProps.activeTab}, () => {console.log(this.state.activeTab)})
     }
     setActiveTab = (tab) => this.setState({activeTab:tab})
     hideModal = () => this.setState({display:false})
@@ -167,24 +163,24 @@ class CampaignList extends Component {
         return(
             <div>
                 <div style={shifted10}>
-                    <p style={fontXL}>Manage Campaigns</p>
-                    <TopbarTab text= "Upcoming Campaigns" activeTab= {this.state.activeTab} index={0} clickHandler={this.setActiveTab}/>
-                    <TopbarTab text= "Live Campaigns" activeTab= {this.state.activeTab} index={1} clickHandler={this.setActiveTab}/>
-                    <TopbarTab text= "Past Campaigns" activeTab= {this.state.activeTab} index={2} clickHandler={this.setActiveTab}/>
+                    <p style={fontXL}>{this.props.locales.manageCampaigns}</p>
+                    <TopbarTab text= {this.props.locales.upcomingCampaigns} activeTab= {this.state.activeTab} index={0} clickHandler={this.setActiveTab}/>
+                    <TopbarTab text= {this.props.locales.liveCampaigns} activeTab= {this.state.activeTab} index={1} clickHandler={this.setActiveTab}/>
+                    <TopbarTab text= {this.props.locales.pastCampaigns} activeTab= {this.state.activeTab} index={2} clickHandler={this.setActiveTab}/>
                     <hr style={rowStyle}/>
                 </div>
                 <div style={overflowStyle}>
                 <table style={shadowStyle}>
                     <tbody>
                         <tr>
-                            <th style={thStyle}>DATE</th>
-                            <th style={thStyle}>CAMPAIGN</th>
-                            <th style={thStyle}>VIEW</th>
-                            <th style={thStyle}>ACTIONS</th>
+                            <th style={thStyle}>{this.props.locales.date}</th>
+                            <th style={thStyle}>{this.props.locales.campaign}</th>
+                            <th style={thStyle}>{this.props.locales.view}</th>
+                            <th style={thStyle}>{this.props.locales.actions}</th>
                         </tr>
                         {Campaigns.data.map((item, i) => (
                             <CampaignInfo name={item.name} createdOn={item.createdOn} price={item.price} region={item.region} activeTab={this.state.activeTab}
-                                        csv={item.csv} report={item.report} image_url={item.image_url} id={i} displayFunc={this.displayModal}/>
+                                        csv={item.csv} report={item.report} image_url={item.image_url} id={i} displayFunc={this.displayModal} locales={this.props.locales}/>
                         ))}
                     </tbody>
                 </table>
@@ -199,24 +195,24 @@ class CampaignList extends Component {
                             <p style={heading3Style}>{this.state.displayRegion}</p>
                             </div>
                         </div>
-                        <p style={heading1Style}>Pricing</p>
+                        <p style={heading1Style}>{this.props.locales.pricing}</p>
                         <table style={modalTableStyle}>
                             <tbody>
                                 <tr>
-                                    <td style={modalTableLabelStyle}>1 Week - 1 Month</td>
+                                    <td style={modalTableLabelStyle}>{this.props.locales.weekMonth}</td>
                                     <td style={modalTableValueStyle}>$ {this.state.price1.toFixed(2)}</td>
                                 </tr>
                                 <tr>
-                                    <td style={modalTableLabelStyle}>6 Months</td>
+                                    <td style={modalTableLabelStyle}>{this.props.locales.halfYear}</td>
                                     <td style={modalTableValueStyle}>$ {this.state.price2.toFixed(2)}</td>
                                 </tr>
                                 <tr>
-                                    <td style={modalTableLabelStyle}>1 Year</td>
+                                    <td style={modalTableLabelStyle}>{this.props.locales.year}</td>
                                     <td style={modalTableValueStyle}>$ {this.state.price3.toFixed(2)}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <button style={closeButtonStyle} onClick={this.hideModal}>Close</button>
+                        <button style={closeButtonStyle} onClick={this.hideModal}>{this.props.locales.close}</button>
                     </div>
 
                 </div>

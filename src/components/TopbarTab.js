@@ -44,17 +44,18 @@ class TopbarTab extends Component {
             clickHandler:props.clickHandler,
             index:props.index
         }
-        console.log(this.state.activeTab, this.state.text)
     }
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        console.log("compwill"+ this.state.activeTab)
-        this.setState({activeTab: nextProps.activeTab}, () => {console.log(this.state.activeTab)})
+    componentDidUpdate(nextProps) {
+        if (this.state.activeTab != this.props.activeTab)
+        {
+        this.setState({activeTab: this.props.activeTab})
+        }
     }
 
     render() {
         return(
             <div style={tabStyle} onClick={() => this.state.clickHandler(this.state.index)}>
-                <p style={(this.state.activeTab == this.state.index) ? activeTitleStyle : dormantTitleStyle}>{this.state.text}</p>
+                <p style={(this.state.activeTab == this.state.index) ? activeTitleStyle : dormantTitleStyle}>{this.props.text}</p>
                 <hr style={(this.state.activeTab == this.state.index) ? activeRowStyle : dormantRowStyle}></hr>
             </div>
         )

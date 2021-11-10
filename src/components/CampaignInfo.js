@@ -69,11 +69,11 @@ const infoDateLabelStyle = {
     marginTop: 8,
     marginBottom: 8
 }
-const ExampleCustomInput = React.forwardRef(({ value, onClick }, ref) => (
+const ExampleCustomInput = React.forwardRef(({ value, onClick, text }, ref) => (
     <div style={infoDateLabelStyle} onClick={onClick} ref={ref}>
     <img src={Calendar} style={imgLabelStyle}/>
     <div style={floatLeft}>
-        <p style={labelStyle}>Schedule again</p>
+        <p style={labelStyle}>{text}</p>
     </div>
     </div>
   ));
@@ -104,11 +104,10 @@ class CampaignInfo extends Component {
         }
     }
     componentDidUpdate(nextProps) {
-        console.log("compwill"+ this.state.activeTab + this.props.activeTab + this.state.id)
         let isVisible = ((this.state.diffDays < 0) & this.props.activeTab == 0) | ((this.state.diffDays == 0) & this.props.activeTab == 1) | ((this.state.diffDays > 0) & this.props.activeTab == 2)
         if (this.state.activeTab != this.props.activeTab)
         {
-        this.setState({activeTab: this.props.activeTab}, this.setState({visible:isVisible}, () => {console.log("postvisible" + this.state.activeTab + this.state.visible)}))
+        this.setState({activeTab: this.props.activeTab}, this.setState({visible:isVisible}))
         }
     }
     dateChange = (value) => {
@@ -130,7 +129,7 @@ class CampaignInfo extends Component {
             <tr key={this.state.id} style={this.state.visible ? borderStyle : hiddenStyle}>
                 <td>
                     <p style={heading2Style}>{this.state.createdOn}</p>
-                    <p style={heading3Style}>{(this.state.diffDays == 0) ? "Live" : (Math.abs(this.state.diffDays).toString() + ((Math.abs(this.state.diffDays) > 1) ? " days" : " day") + ((this.state.diffDays > 0) ? " ago" : " to go"))}</p>
+                    <p style={heading3Style}>{(this.state.diffDays == 0) ? this.props.locales.live : (Math.abs(this.state.diffDays).toString() + ((Math.abs(this.state.diffDays) > 1) ? this.props.locales.days : this.props.locales.day) + ((this.state.diffDays > 0) ? this.props.locales.ago : this.props.locales.toGo))}</p>
                 </td>
                 <td>
                     <img src={this.state.image_url} style={imgStyle}/>
@@ -143,7 +142,7 @@ class CampaignInfo extends Component {
                     <div  style={infoLabelStyle} onClick={() => this.state.displayFunc(this.state.price.monthly,this.state.price.half_yearly,this.state.price.yearly, this.state.image_url, this.state.name, this.state.region)}>
                         <img src={Price} style={imgLabelStyle}/>
                         <div style={floatLeft}>
-                            <p style={labelStyle}>View Pricing</p>
+                            <p style={labelStyle}>{this.props.locales.viewPricing}</p>
                         </div>
                     </div>
                 </td>
@@ -151,16 +150,16 @@ class CampaignInfo extends Component {
                     <div style={infoLabelStyle}>
                         <img src={Csv} style={imgLabelStyle}/>
                         <div style={floatLeft}>
-                            <p style={labelStyle}>CSV</p>
+                            <p style={labelStyle}>{this.props.locales.csv}</p>
                         </div>
                     </div>
                     <div style={infoLabelStyle}>
                         <img src={Report} style={imgLabelStyle}/>
                         <div style={floatLeft}>
-                            <p style={labelStyle}>Report</p>
+                            <p style={labelStyle}>{this.props.locales.report}</p>
                         </div>
                     </div>
-                        <DatePicker value={new Date()} returnValue="start" calendarIcon={<ExampleCustomInput/>} onChange={this.dateChange}/>
+                        <DatePicker value={new Date()} returnValue="start" calendarIcon={<ExampleCustomInput text={this.props.locales.schedule}/>} onChange={this.dateChange}/>
                 </td>
             </tr>
         )
