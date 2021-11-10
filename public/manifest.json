@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Campaign Manager",
+  "name": "Manage past, current & future campaigns",
   "icons": [
     {
       "src": "favicon.ico",
