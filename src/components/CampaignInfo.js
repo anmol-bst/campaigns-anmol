@@ -4,8 +4,9 @@ import Price from '../assets/Price.svg'
 import Csv from '../assets/file.svg'
 import Report from '../assets/statisticsReport.svg'
 import Calendar from '../assets/calendar.svg'
+import Fallback from '../assets/Fallback.png'
 import DatePicker from "react-date-picker"
-import { getDatabase, ref, update, push, child, key} from "firebase/database";
+import { getDatabase, ref, update} from "firebase/database";
 import '../assets/CustomDatePicker.css'
 
 const heading2Style = {
@@ -97,10 +98,12 @@ class CampaignInfo extends Component {
             csv:props.csv,
             report:props.report,
             image_url:props.image_url,
+            imageUrl: Fallback,
             id:props.id,
             diffDays:diffDays,
             displayFunc:props.displayFunc,
             activeTab: props.activeTab,
+            imgErrored: false,
             visible: ((diffDays < 0) & props.activeTab == 0) | ((diffDays == 0) & props.activeTab == 1) | ((diffDays > 0) & props.activeTab == 2)
         }
     }
@@ -180,7 +183,6 @@ class CampaignInfo extends Component {
         this.dateChange(this.props.createdOn)
         }
     }
-
     render() {
         return(
             <tr key={this.state.id} style={this.state.visible ? borderStyle : hiddenStyle}>
@@ -189,7 +191,7 @@ class CampaignInfo extends Component {
                     <p style={heading3Style}>{(this.state.diffDays == 0) ? this.props.locales.live : (Math.abs(this.state.diffDays).toString() + ((Math.abs(this.state.diffDays) > 1) ? this.props.locales.days : this.props.locales.day) + ((this.state.diffDays > 0) ? this.props.locales.ago : this.props.locales.toGo))}</p>
                 </td>
                 <td>
-                    <img src={this.state.image_url} style={imgStyle}/>
+                    <img src={this.state.imgErrored ? this.state.imageUrl : this.state.image_url} style={imgStyle} onError={() => {this.setState({imgErrored:true})}}/>
                     <div style={floatLeft}>
                         <p style={heading2Style}>{this.state.name}</p>
                         <p style={heading3Style}>{this.state.region}</p>
